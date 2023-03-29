@@ -21,287 +21,133 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Monitor_Dataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
+			"name": "[concat(parameters('factoryName'), '/Monitor_Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Sales_CRM_Table_1",
-								"type": "DatasetReference"
-							},
-							"name": "SalesCRMTable"
+				"activities": [
+					{
+						"name": "Monitor_Dataflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
 						},
-						{
-							"dataset": {
-								"referenceName": "Sales_AfterSales_Table_2",
-								"type": "DatasetReference"
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Monitor_Dataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SalesCRMTable": {},
+									"SalesAfterSalesTable": {},
+									"sink1": {}
+								}
 							},
-							"name": "SalesAfterSalesTable"
-						}
-					],
-					"sinks": [
-						{
-							"linkedService": {
-								"referenceName": "ADLSG_Monitor_linked_Service",
-								"type": "LinkedServiceReference"
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
 							},
-							"name": "sink1",
-							"rejectedDataLinkedService": {
-								"referenceName": "ADLSG_Monitor_linked_Service",
-								"type": "LinkedServiceReference"
-							}
+							"traceLevel": "Fine"
 						}
-					],
-					"transformations": [
-						{
-							"name": "SalesCRMTableSelect"
-						},
-						{
-							"name": "SalesAfterSalesTableSelect"
-						},
-						{
-							"name": "join1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          EQCR_DLR_NO as string,",
-						"          EQCR_ENQRY_NO as string,",
-						"          EQCR_SEQ as boolean,",
-						"          EQCR_CORP_NO as string,",
-						"          EQCR_CMPN_NO as string,",
-						"          EQCR_MODEL_CODE as string,",
-						"          EQCR_VRNT_CODE as double,",
-						"          EQCR_COLOR_CODE as string,",
-						"          EQCR_QTY as boolean,",
-						"          EQCR_CRTE_DTIME as timestamp,",
-						"          EQCR_CRTE_EMP_NO as string,",
-						"          EQCR_UPDT_DTIME as timestamp,",
-						"          EQCR_UPDT_EMP_NO as string,",
-						"          EQCR_INTCOLOR_CODE as string,",
-						"          EQCR_MAKER_CODE as string,",
-						"          EQCR_INT_COLOR_CODE as string,",
-						"          EQCR_QUOTED_PRICE as boolean,",
-						"          EQCR_EXPECTED_PRICE as string,",
-						"          EQCR_FUEL_TYPE as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> SalesCRMTable",
-						"source(output(",
-						"          EQRY_DLR_NO as string,",
-						"          EQRY_ENQRY_NO as string,",
-						"          EQRY_CORP_NO as string,",
-						"          EQRY_CMPN_NO as string,",
-						"          EQRY_DATE as date,",
-						"          EQRY_SRC_CODE as string,",
-						"          EQRY_STAT as short,",
-						"          EQRY_TYPE as string,",
-						"          EQRY_TEST_DRVR_DATE as string,",
-						"          EQRY_FNCE_YN as boolean,",
-						"          EQRY_FNCER_CODE as string,",
-						"          EQRY_LOAN_AMT as double,",
-						"          EQRY_TENOR_MNTHS as boolean,",
-						"          EQRY_EXCHG_YN as boolean,",
-						"          EQRY_EXCHG_MODEL_CODE as string,",
-						"          EQRY_EXCHG_SRC_CODE as double,",
-						"          EQRY_EXPCT_PRICE as double,",
-						"          EQRY_QUOTD_PRICE as double,",
-						"          EQRY_CLSE_DATE as date,",
-						"          EQRY_CLSE_TYPE as double,",
-						"          EQRY_CLSE_RMRKS as string,",
-						"          EQRY_EMP_NO as string,",
-						"          EQRY_CUST_NO as string,",
-						"          EQRY_LISTD_CORP as string,",
-						"          EQRY_CORP_NAME as string,",
-						"          EQRY_RFRL_BY as string,",
-						"          EQRY_CRTE_DTIME as timestamp,",
-						"          EQRY_CRTE_EMP_NO as string,",
-						"          EQRY_UPDT_DTIME as timestamp,",
-						"          EQRY_UPDT_EMP_NO as string,",
-						"          EQRY_EQFU_SEQ as double,",
-						"          EQRY_UPDT_DATE as string,",
-						"          EQRY_TEST_DRIVE_YN as boolean,",
-						"          EQRY_SR_NUM as string,",
-						"          EQRY_SR_TYPE as string,",
-						"          EQRY_FLW_STATUS as boolean,",
-						"          EQRY_ASSOCIATE_ID as double,",
-						"          EQRY_RSO_ID as double,",
-						"          EQRY_FUEL_TYPE as string,",
-						"          EQRY_PRESENT_CAR_YN as boolean,",
-						"          EQRY_MAKER_CODE as string,",
-						"          EQRY_TD_VIN as string,",
-						"          EQRY_CUST_BLOCK as boolean,",
-						"          EQRY_BULK_SALE as boolean,",
-						"          EQRY_P_MODL_YEAR as double,",
-						"          EQRY_CLS_VAL as double,",
-						"          EQRY_INCOM_GROUP as double,",
-						"          EQRY_REFL_ID as string,",
-						"          EQRY_REFL_PUNCH_DLR_NO as string,",
-						"          EQRY_PLAN_DATE as string,",
-						"          EQRY_ATIVT_NAME_CODE as string,",
-						"          EQRY_ATIVT_LOC_CODE as string,",
-						"          EQRY_NEWCAR_YN as boolean,",
-						"          EQRY_FCALL_EMP_NO as string,",
-						"          EQRY_APNT_DTIME as string,",
-						"          VIST_DTIME as string,",
-						"          LEAV_DTIME as string,",
-						"          EQRY_CTGR_CODE as double,",
-						"          EQRY_SUB_SRC_CODE as short,",
-						"          EQRY_CLSE_GRP_TYPE as string,",
-						"          EQRY_BUDG_TYPE as string,",
-						"          EQRY_CERT_TYPE as string,",
-						"          EQRY_UC_SC_EMP_NO as string,",
-						"          EQRY_TDRIVE_RMRKS as string,",
-						"          EQRY_VC_RMRKS as string,",
-						"          EQRY_REQ_TYPE as string,",
-						"          EQRY_EMAILSEND_YN as string,",
-						"          EQRY_SRC_FLG as string,",
-						"          EQRY_SR_NUM_REAL as string,",
-						"          EQRY_ENG_TYP as string,",
-						"          EQRY_TRNSM_TYP as string,",
-						"          SOQ_TAG_YN as boolean,",
-						"          EQRY_EVAL_YN as string,",
-						"          EQRY_EXCH_DN as string,",
-						"          EQRY_FINAL_BP as string,",
-						"          EQRY_CAMPGN_NO as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> SalesAfterSalesTable",
-						"SalesCRMTable select(mapColumn(",
-						"          EQCR_DLR_NO,",
-						"          EQCR_ENQRY_NO,",
-						"          EQCR_SEQ,",
-						"          EQCR_CORP_NO,",
-						"          EQCR_CMPN_NO,",
-						"          EQCR_MODEL_CODE,",
-						"          EQCR_VRNT_CODE,",
-						"          EQCR_COLOR_CODE,",
-						"          EQCR_QTY,",
-						"          EQCR_CRTE_DTIME,",
-						"          EQCR_CRTE_EMP_NO,",
-						"          EQCR_UPDT_DTIME,",
-						"          EQCR_UPDT_EMP_NO,",
-						"          EQCR_INTCOLOR_CODE,",
-						"          EQCR_MAKER_CODE,",
-						"          EQCR_INT_COLOR_CODE,",
-						"          EQCR_QUOTED_PRICE,",
-						"          EQCR_EXPECTED_PRICE,",
-						"          EQCR_FUEL_TYPE",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> SalesCRMTableSelect",
-						"SalesAfterSalesTable select(mapColumn(",
-						"          EQRY_DLR_NO,",
-						"          EQRY_ENQRY_NO,",
-						"          EQRY_CORP_NO,",
-						"          EQRY_CMPN_NO,",
-						"          EQRY_DATE,",
-						"          EQRY_SRC_CODE,",
-						"          EQRY_STAT,",
-						"          EQRY_TYPE,",
-						"          EQRY_FNCE_YN,",
-						"          EQRY_FNCER_CODE,",
-						"          EQRY_LOAN_AMT,",
-						"          EQRY_TENOR_MNTHS,",
-						"          EQRY_EXCHG_YN,",
-						"          EQRY_EXCHG_MODEL_CODE,",
-						"          EQRY_EXCHG_SRC_CODE,",
-						"          EQRY_EXPCT_PRICE,",
-						"          EQRY_QUOTD_PRICE,",
-						"          EQRY_CLSE_DATE,",
-						"          EQRY_CLSE_TYPE,",
-						"          EQRY_CLSE_RMRKS,",
-						"          EQRY_EMP_NO,",
-						"          EQRY_CUST_NO,",
-						"          EQRY_LISTD_CORP,",
-						"          EQRY_CORP_NAME,",
-						"          EQRY_CRTE_DTIME,",
-						"          EQRY_CRTE_EMP_NO,",
-						"          EQRY_UPDT_DTIME,",
-						"          EQRY_UPDT_EMP_NO,",
-						"          EQRY_EQFU_SEQ,",
-						"          EQRY_SR_TYPE,",
-						"          EQRY_FLW_STATUS,",
-						"          EQRY_ASSOCIATE_ID,",
-						"          EQRY_RSO_ID,",
-						"          EQRY_FUEL_TYPE,",
-						"          EQRY_PRESENT_CAR_YN,",
-						"          EQRY_MAKER_CODE,",
-						"          EQRY_CUST_BLOCK,",
-						"          EQRY_BULK_SALE,",
-						"          EQRY_P_MODL_YEAR,",
-						"          EQRY_CLS_VAL,",
-						"          EQRY_NEWCAR_YN,",
-						"          EQRY_FCALL_EMP_NO,",
-						"          EQRY_CTGR_CODE,",
-						"          EQRY_SUB_SRC_CODE,",
-						"          EQRY_CLSE_GRP_TYPE,",
-						"          EQRY_TDRIVE_RMRKS,",
-						"          EQRY_VC_RMRKS,",
-						"          EQRY_REQ_TYPE,",
-						"          EQRY_SRC_FLG,",
-						"          EQRY_SR_NUM_REAL,",
-						"          EQRY_ENG_TYP,",
-						"          EQRY_TRNSM_TYP",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> SalesAfterSalesTableSelect",
-						"SalesAfterSalesTableSelect, SalesCRMTableSelect join(EQRY_DLR_NO == EQCR_DLR_NO,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join1",
-						"join1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'delta',",
-						"     fileSystem: 'deltalake',",
-						"     mergeSchema: false,",
-						"     autoCompact: false,",
-						"     optimizedWrite: false,",
-						"     vacuum: 0,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1"
-					]
-				}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Sales_CRM_Table_1')]",
-				"[concat(variables('factoryId'), '/datasets/Sales_AfterSales_Table_2')]",
-				"[concat(variables('factoryId'), '/linkedServices/ADLSG_Monitor_linked_Service')]"
+				"[concat(variables('factoryId'), '/dataflows/Monitor_Dataflow')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ADLSG_Monitor_linked_Service')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('ADLSG_Monitor_linked_Service_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('ADLSG_Monitor_linked_Service_accountKey')]"
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Sales_CRM_Table_1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TestDataSet",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
-				}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Sales_CRM_Table_1')]",
+				"[concat(variables('factoryId'), '/datasets/TestDataSet')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Sales_CRM_Table_1')]",
+			"name": "[concat(parameters('factoryName'), '/OutputDataSet')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -314,92 +160,14 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "Stage1_Sales_CRM_SCEQCR_TB.csv",
-						"fileSystem": "inputdata"
+						"fileSystem": "outputdata"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": [
-					{
-						"name": "EQCR_DLR_NO",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_ENQRY_NO",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_SEQ",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_CORP_NO",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_CMPN_NO",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_MODEL_CODE",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_VRNT_CODE",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_COLOR_CODE",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_QTY",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_CRTE_DTIME",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_CRTE_EMP_NO",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_UPDT_DTIME",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_UPDT_EMP_NO",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_INTCOLOR_CODE",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_MAKER_CODE",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_INT_COLOR_CODE",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_QUOTED_PRICE",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_EXPECTED_PRICE",
-						"type": "String"
-					},
-					{
-						"name": "EQCR_FUEL_TYPE",
-						"type": "String"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLSG_Monitor_linked_Service')]"
@@ -739,7 +507,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/OutputDataSet')]",
+			"name": "[concat(parameters('factoryName'), '/Sales_CRM_Table_1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -752,7 +520,112 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileSystem": "outputdata"
+						"fileName": "Stage1_Sales_CRM_SCEQCR_TB.csv",
+						"fileSystem": "inputdata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "EQCR_DLR_NO",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_ENQRY_NO",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_SEQ",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_CORP_NO",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_CMPN_NO",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_MODEL_CODE",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_VRNT_CODE",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_COLOR_CODE",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_QTY",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_CRTE_DTIME",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_CRTE_EMP_NO",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_UPDT_DTIME",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_UPDT_EMP_NO",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_INTCOLOR_CODE",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_MAKER_CODE",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_INT_COLOR_CODE",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_QUOTED_PRICE",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_EXPECTED_PRICE",
+						"type": "String"
+					},
+					{
+						"name": "EQCR_FUEL_TYPE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLSG_Monitor_linked_Service')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TestDataSet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLSG_Monitor_linked_Service",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "testcontainers"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -766,51 +639,283 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Monitor_Pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/ADLSG_Monitor_linked_Service')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "Monitor_Dataflow",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Monitor_Dataflow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"SalesCRMTable": {},
-									"SalesAfterSalesTable": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 16,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLSG_Monitor_linked_Service_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLSG_Monitor_linked_Service_accountKey')]"
 					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Monitor_Dataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Sales_CRM_Table_1",
+								"type": "DatasetReference"
+							},
+							"name": "SalesCRMTable"
+						},
+						{
+							"dataset": {
+								"referenceName": "Sales_AfterSales_Table_2",
+								"type": "DatasetReference"
+							},
+							"name": "SalesAfterSalesTable"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "ADLSG_Monitor_linked_Service",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "ADLSG_Monitor_linked_Service",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "SalesCRMTableSelect"
+						},
+						{
+							"name": "SalesAfterSalesTableSelect"
+						},
+						{
+							"name": "join1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EQCR_DLR_NO as string,",
+						"          EQCR_ENQRY_NO as string,",
+						"          EQCR_SEQ as boolean,",
+						"          EQCR_CORP_NO as string,",
+						"          EQCR_CMPN_NO as string,",
+						"          EQCR_MODEL_CODE as string,",
+						"          EQCR_VRNT_CODE as double,",
+						"          EQCR_COLOR_CODE as string,",
+						"          EQCR_QTY as boolean,",
+						"          EQCR_CRTE_DTIME as timestamp,",
+						"          EQCR_CRTE_EMP_NO as string,",
+						"          EQCR_UPDT_DTIME as timestamp,",
+						"          EQCR_UPDT_EMP_NO as string,",
+						"          EQCR_INTCOLOR_CODE as string,",
+						"          EQCR_MAKER_CODE as string,",
+						"          EQCR_INT_COLOR_CODE as string,",
+						"          EQCR_QUOTED_PRICE as boolean,",
+						"          EQCR_EXPECTED_PRICE as string,",
+						"          EQCR_FUEL_TYPE as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> SalesCRMTable",
+						"source(output(",
+						"          EQRY_DLR_NO as string,",
+						"          EQRY_ENQRY_NO as string,",
+						"          EQRY_CORP_NO as string,",
+						"          EQRY_CMPN_NO as string,",
+						"          EQRY_DATE as date,",
+						"          EQRY_SRC_CODE as string,",
+						"          EQRY_STAT as short,",
+						"          EQRY_TYPE as string,",
+						"          EQRY_TEST_DRVR_DATE as string,",
+						"          EQRY_FNCE_YN as boolean,",
+						"          EQRY_FNCER_CODE as string,",
+						"          EQRY_LOAN_AMT as double,",
+						"          EQRY_TENOR_MNTHS as boolean,",
+						"          EQRY_EXCHG_YN as boolean,",
+						"          EQRY_EXCHG_MODEL_CODE as string,",
+						"          EQRY_EXCHG_SRC_CODE as double,",
+						"          EQRY_EXPCT_PRICE as double,",
+						"          EQRY_QUOTD_PRICE as double,",
+						"          EQRY_CLSE_DATE as date,",
+						"          EQRY_CLSE_TYPE as double,",
+						"          EQRY_CLSE_RMRKS as string,",
+						"          EQRY_EMP_NO as string,",
+						"          EQRY_CUST_NO as string,",
+						"          EQRY_LISTD_CORP as string,",
+						"          EQRY_CORP_NAME as string,",
+						"          EQRY_RFRL_BY as string,",
+						"          EQRY_CRTE_DTIME as timestamp,",
+						"          EQRY_CRTE_EMP_NO as string,",
+						"          EQRY_UPDT_DTIME as timestamp,",
+						"          EQRY_UPDT_EMP_NO as string,",
+						"          EQRY_EQFU_SEQ as double,",
+						"          EQRY_UPDT_DATE as string,",
+						"          EQRY_TEST_DRIVE_YN as boolean,",
+						"          EQRY_SR_NUM as string,",
+						"          EQRY_SR_TYPE as string,",
+						"          EQRY_FLW_STATUS as boolean,",
+						"          EQRY_ASSOCIATE_ID as double,",
+						"          EQRY_RSO_ID as double,",
+						"          EQRY_FUEL_TYPE as string,",
+						"          EQRY_PRESENT_CAR_YN as boolean,",
+						"          EQRY_MAKER_CODE as string,",
+						"          EQRY_TD_VIN as string,",
+						"          EQRY_CUST_BLOCK as boolean,",
+						"          EQRY_BULK_SALE as boolean,",
+						"          EQRY_P_MODL_YEAR as double,",
+						"          EQRY_CLS_VAL as double,",
+						"          EQRY_INCOM_GROUP as double,",
+						"          EQRY_REFL_ID as string,",
+						"          EQRY_REFL_PUNCH_DLR_NO as string,",
+						"          EQRY_PLAN_DATE as string,",
+						"          EQRY_ATIVT_NAME_CODE as string,",
+						"          EQRY_ATIVT_LOC_CODE as string,",
+						"          EQRY_NEWCAR_YN as boolean,",
+						"          EQRY_FCALL_EMP_NO as string,",
+						"          EQRY_APNT_DTIME as string,",
+						"          VIST_DTIME as string,",
+						"          LEAV_DTIME as string,",
+						"          EQRY_CTGR_CODE as double,",
+						"          EQRY_SUB_SRC_CODE as short,",
+						"          EQRY_CLSE_GRP_TYPE as string,",
+						"          EQRY_BUDG_TYPE as string,",
+						"          EQRY_CERT_TYPE as string,",
+						"          EQRY_UC_SC_EMP_NO as string,",
+						"          EQRY_TDRIVE_RMRKS as string,",
+						"          EQRY_VC_RMRKS as string,",
+						"          EQRY_REQ_TYPE as string,",
+						"          EQRY_EMAILSEND_YN as string,",
+						"          EQRY_SRC_FLG as string,",
+						"          EQRY_SR_NUM_REAL as string,",
+						"          EQRY_ENG_TYP as string,",
+						"          EQRY_TRNSM_TYP as string,",
+						"          SOQ_TAG_YN as boolean,",
+						"          EQRY_EVAL_YN as string,",
+						"          EQRY_EXCH_DN as string,",
+						"          EQRY_FINAL_BP as string,",
+						"          EQRY_CAMPGN_NO as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> SalesAfterSalesTable",
+						"SalesCRMTable select(mapColumn(",
+						"          EQCR_DLR_NO,",
+						"          EQCR_ENQRY_NO,",
+						"          EQCR_SEQ,",
+						"          EQCR_CORP_NO,",
+						"          EQCR_CMPN_NO,",
+						"          EQCR_MODEL_CODE,",
+						"          EQCR_VRNT_CODE,",
+						"          EQCR_COLOR_CODE,",
+						"          EQCR_QTY,",
+						"          EQCR_CRTE_DTIME,",
+						"          EQCR_CRTE_EMP_NO,",
+						"          EQCR_UPDT_DTIME,",
+						"          EQCR_UPDT_EMP_NO,",
+						"          EQCR_INTCOLOR_CODE,",
+						"          EQCR_MAKER_CODE,",
+						"          EQCR_INT_COLOR_CODE,",
+						"          EQCR_QUOTED_PRICE,",
+						"          EQCR_EXPECTED_PRICE,",
+						"          EQCR_FUEL_TYPE",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SalesCRMTableSelect",
+						"SalesAfterSalesTable select(mapColumn(",
+						"          EQRY_DLR_NO,",
+						"          EQRY_ENQRY_NO,",
+						"          EQRY_CORP_NO,",
+						"          EQRY_CMPN_NO,",
+						"          EQRY_DATE,",
+						"          EQRY_SRC_CODE,",
+						"          EQRY_STAT,",
+						"          EQRY_TYPE,",
+						"          EQRY_FNCE_YN,",
+						"          EQRY_FNCER_CODE,",
+						"          EQRY_LOAN_AMT,",
+						"          EQRY_TENOR_MNTHS,",
+						"          EQRY_EXCHG_YN,",
+						"          EQRY_EXCHG_MODEL_CODE,",
+						"          EQRY_EXCHG_SRC_CODE,",
+						"          EQRY_EXPCT_PRICE,",
+						"          EQRY_QUOTD_PRICE,",
+						"          EQRY_CLSE_DATE,",
+						"          EQRY_CLSE_TYPE,",
+						"          EQRY_CLSE_RMRKS,",
+						"          EQRY_EMP_NO,",
+						"          EQRY_CUST_NO,",
+						"          EQRY_LISTD_CORP,",
+						"          EQRY_CORP_NAME,",
+						"          EQRY_CRTE_DTIME,",
+						"          EQRY_CRTE_EMP_NO,",
+						"          EQRY_UPDT_DTIME,",
+						"          EQRY_UPDT_EMP_NO,",
+						"          EQRY_EQFU_SEQ,",
+						"          EQRY_SR_TYPE,",
+						"          EQRY_FLW_STATUS,",
+						"          EQRY_ASSOCIATE_ID,",
+						"          EQRY_RSO_ID,",
+						"          EQRY_FUEL_TYPE,",
+						"          EQRY_PRESENT_CAR_YN,",
+						"          EQRY_MAKER_CODE,",
+						"          EQRY_CUST_BLOCK,",
+						"          EQRY_BULK_SALE,",
+						"          EQRY_P_MODL_YEAR,",
+						"          EQRY_CLS_VAL,",
+						"          EQRY_NEWCAR_YN,",
+						"          EQRY_FCALL_EMP_NO,",
+						"          EQRY_CTGR_CODE,",
+						"          EQRY_SUB_SRC_CODE,",
+						"          EQRY_CLSE_GRP_TYPE,",
+						"          EQRY_TDRIVE_RMRKS,",
+						"          EQRY_VC_RMRKS,",
+						"          EQRY_REQ_TYPE,",
+						"          EQRY_SRC_FLG,",
+						"          EQRY_SR_NUM_REAL,",
+						"          EQRY_ENG_TYP,",
+						"          EQRY_TRNSM_TYP",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SalesAfterSalesTableSelect",
+						"SalesAfterSalesTableSelect, SalesCRMTableSelect join(EQRY_DLR_NO == EQCR_DLR_NO,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delta',",
+						"     fileSystem: 'deltalake',",
+						"     mergeSchema: false,",
+						"     autoCompact: false,",
+						"     optimizedWrite: false,",
+						"     vacuum: 0,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Monitor_Dataflow')]"
+				"[concat(variables('factoryId'), '/datasets/Sales_CRM_Table_1')]",
+				"[concat(variables('factoryId'), '/datasets/Sales_AfterSales_Table_2')]",
+				"[concat(variables('factoryId'), '/linkedServices/ADLSG_Monitor_linked_Service')]"
 			]
 		}
 	]
