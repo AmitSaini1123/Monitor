@@ -25,7 +25,11 @@
 						"referenceName": "OutputDataSet",
 						"type": "DatasetReference"
 					},
-					"name": "SinkDataSet"
+					"name": "SinkDataSet",
+					"rejectedDataLinkedService": {
+						"referenceName": "ADLSG_Monitor_linked_Service",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [
@@ -231,6 +235,7 @@
 				"     broadcast: 'auto')~> join1",
 				"join1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     partitionFileNames:['SalesData.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
