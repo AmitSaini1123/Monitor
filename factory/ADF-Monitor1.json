@@ -1,0 +1,9 @@
+{
+	"name": "ADF-Monitor1",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "90524eda-20fa-4263-87ce-5c3552641ca4",
+		"tenantId": "90d12e33-ad5e-4e82-8b5e-82bff0658ae0"
+	}
+}
