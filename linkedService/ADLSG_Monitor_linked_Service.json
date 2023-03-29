@@ -1,0 +1,12 @@
+{
+	"name": "ADLSG_Monitor_linked_Service",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://stroagemontior.dfs.core.windows.net/",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDQzODE4NDc5LTQwMjItNDA0Mi1BNEFDLTE2MzUzQjk1NzRCM19iZDIwNzYxZS00M2M1LTQ0YTEtYjNlNy1lMDE0OTY1NzBmYjQiDQp9"
+		}
+	}
+}
