@@ -56,7 +56,13 @@
 				"outputs": [
 					{
 						"referenceName": "DelimitedSink",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": {
+								"value": "csv",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
