@@ -19,6 +19,7 @@
 					"value": "@concat(\n    dataset().FileName,\n    'List_',\n    substring(convertFromUtc(utcNow(),'Eastern Standard Time' ),0 ,10 ),'.csv'\n)",
 					"type": "Expression"
 				},
+				"folderPath": "amit/teams",
 				"fileSystem": "outputdata"
 			},
 			"columnDelimiter": ",",
