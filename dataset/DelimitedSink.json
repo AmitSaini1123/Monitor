@@ -5,11 +5,20 @@
 			"referenceName": "ADLSG_Monitor_linked_Service",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(\n    dataset().FileName,\n    'List_',\n    substring(convertFromUtc(utcNow(),'Eastern Standard Time' ),0 ,10 ),'.csv'\n)",
+					"type": "Expression"
+				},
 				"fileSystem": "outputdata"
 			},
 			"columnDelimiter": ",",
