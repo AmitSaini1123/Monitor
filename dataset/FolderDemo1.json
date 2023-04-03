@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@concat(\n    'salesDataSet_',\n    utcNow(),\n    '.csv'\n    )",
+					"value": "@concat(\n    'Stage1_Sales_CRM_SCEQCR_TB',\n    utcNow(),\n    '.csv'\n    )",
 					"type": "Expression"
 				},
 				"fileSystem": "inputdata"
