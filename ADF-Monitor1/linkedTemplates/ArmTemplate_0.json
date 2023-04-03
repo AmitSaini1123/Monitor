@@ -570,10 +570,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@concat(\n    'salesDataSet_',\n    utcNow(),\n    '.csv'\n    )",
-							"type": "Expression"
-						},
+						"fileName": "Stage1_Sales_CRM_SCEQCR_TB.csv",
 						"fileSystem": "inputdata"
 					},
 					"columnDelimiter": ",",
@@ -673,11 +670,20 @@
 					"referenceName": "ADLSG_Monitor_linked_Service",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(\n    dataset().FileName,\n    'List_',\n    substring(convertFromUtc(utcNow(),'Eastern Standard Time' ),0 ,10 ),'.csv'\n)",
+							"type": "Expression"
+						},
 						"fileSystem": "outputdata"
 					},
 					"columnDelimiter": ",",
@@ -1149,7 +1155,7 @@
 								"formatSettings": {
 									"type": "DelimitedTextWriteSettings",
 									"quoteAllText": true,
-									"fileExtension": ".txt"
+									"fileExtension": ".csv"
 								}
 							},
 							"enableStaging": false,
@@ -1173,7 +1179,12 @@
 							{
 								"referenceName": "DelimitedSink",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": {
+										"value": "csv",
+										"type": "Expression"
+									}
+								}
 							}
 						]
 					}
@@ -1181,11 +1192,6 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
-				},
-				"variables": {
-					"dynamicFolderStructure ": {
-						"type": "String"
-					}
 				},
 				"annotations": []
 			},
